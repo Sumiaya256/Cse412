@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | ISP System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/countup.js@2.6.2/dist/countUp.min.js"></script>
+</head>
+
+<body class="bg-green-50 font-sans text-gray-800">
+
+<div class="flex min-h-screen">
+
+<!-- ================= SIDEBAR ================= -->
+<aside id="sidebar" class="w-64 bg-white border-r border-gray-200 p-6 transition-all duration-300">
+  <h1 class="text-2xl font-extrabold text-green-600 mb-8">ISP Admin</h1>
+
+  <nav class="space-y-3">
+    <button class="navBtn active" onclick="showSection('dashboard')">Dashboard</button>
+    <button class="navBtn" onclick="showSection('users')">Users</button>
+    <button class="navBtn" onclick="showSection('employees')">Employees</button>
+    <button class="navBtn" onclick="showSection('network')">Network</button>
+    <button class="navBtn" onclick="showSection('payments')">Payments</button>
+    <button class="navBtn" onclick="showSection('reports')">Reports</button>
+    <button class="navBtn" onclick="showSection('settings')">Settings</button>
+  </nav>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<main class="flex-1 p-6">
+
+<!-- TOP BAR -->
+<div class="flex justify-between items-center mb-8">
+  <button id="toggleSidebar" class="text-green-600 font-bold text-xl md:hidden">☰</button>
+  <h2 class="text-3xl font-bold">Admin Dashboard</h2>
+  <div class="flex items-center gap-4">
+    <span class="text-sm text-gray-500">ADMIN-001</span>
+    <img class="w-10 h-10 rounded-full border border-gray-200" src="https://i.pravatar.cc/100?img=12">
+  </div>
+</div>
+
+<!-- ================= SECTIONS ================= -->
+<div id="dashboard" class="section">
+
+  <!-- KPI CARDS -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+      <p class="text-gray-500">Total Revenue</p>
+      <h3 class="text-2xl font-bold text-green-600" id="revenue">$0</h3>
+      <span class="text-green-500 font-semibold">▲ 12%</span>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+      <p class="text-gray-500">Total Customers</p>
+      <h3 class="text-2xl font-bold text-green-600" id="customers">0</h3>
+      <span class="text-green-500 font-semibold">▲ 5%</span>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+      <p class="text-gray-500">Active Connections</p>
+      <h3 class="text-2xl font-bold text-green-600" id="connections">0</h3>
+      <span class="text-green-500 font-semibold">▲ 98%</span>
+    </div>
+    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+      <p class="text-gray-500">Pending Issues</p>
+      <h3 class="text-2xl font-bold text-red-500" id="issues">0</h3>
+      <span class="text-red-500 font-semibold">▼ Needs attention</span>
+    </div>
+  </div>
+
+  <!-- CONTENT GRID -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- USERS TABLE -->
+    <div class="lg:col-span-2 bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold text-green-600 mb-4">Recent Customers</h3>
+      <table class="w-full text-gray-700 border-collapse">
+        <thead>
+          <tr class="bg-green-100 text-left">
+            <th class="p-2">ID</th>
+            <th class="p-2">Name</th>
+            <th class="p-2">Plan</th>
+            <th class="p-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hover:bg-green-50">
+            <td class="p-2">C-1021</td><td>Rahim</td><td>Fiber Pro</td><td class="text-green-600">Active</td>
+          </tr>
+          <tr class="hover:bg-green-50">
+            <td class="p-2">C-1022</td><td>Karim</td><td>Gamer</td><td class="text-green-600">Active</td>
+          </tr>
+          <tr class="hover:bg-green-50">
+            <td class="p-2">C-1023</td><td>Sadia</td><td>Basic</td><td class="text-red-500">Suspended</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LIVE NOTIFICATIONS -->
+    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold text-green-600 mb-4">Live Notifications</h3>
+      <ul id="notificationFeed" class="space-y-2 text-gray-700">
+        <li>No notifications yet</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- PLACEHOLDER SECTIONS -->
+<div id="users" class="section hidden"><h3 class="text-xl font-bold text-green-600">Users</h3></div>
+<div id="employees" class="section hidden"><h3 class="text-xl font-bold text-green-600">Employees</h3></div>
+<div id="network" class="section hidden"><h3 class="text-xl font-bold text-green-600">Network</h3></div>
+<div id="payments" class="section hidden"><h3 class="text-xl font-bold text-green-600">Payments</h3></div>
+<div id="reports" class="section hidden"><h3 class="text-xl font-bold text-green-600">Reports</h3></div>
+<div id="settings" class="section hidden"><h3 class="text-xl font-bold text-green-600">Settings</h3></div>
+
+</main>
+</div>
+
+<style>
+.navBtn{
+  width:100%;
+  text-align:left;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:500;
+  transition:.2s;
+}
+.navBtn:hover{background:#d1fae5}
+.navBtn.active{background:#10b981;color:white}
+
+.section{animation:fade .3s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+</style>
+
+<script>
+// Toggle sidebar (mobile)
+document.getElementById("toggleSidebar").onclick = () => {
+  const sb = document.getElementById("sidebar");
+  sb.classList.toggle("hidden");
+}
+
+// Section switch
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('.navBtn').forEach(btn=>btn.classList.remove('active'));
+  document.querySelector(`.navBtn[onclick="showSection('${id}')"]`)?.classList.add('active');
+}
+
+// Live Notifications (Fake)
+const feed = document.getElementById("notificationFeed");
+const messages = ["New customer registered","Payment received (৳2,500)","ONU offline detected","Employee updated profile"];
+setInterval(()=>{
+  const msg = messages[Math.floor(Math.random()*messages.length)];
+  const li = document.createElement("li");
+  li.textContent = msg;
+  feed.prepend(li);
+  if(feed.children.length>5) feed.removeChild(feed.lastChild);
+},4000);
+
+// Animated KPI numbers
+const rev = new CountUp('revenue',124800,{prefix:'$'});
+const cus = new CountUp('customers',3482);
+const con = new CountUp('connections',3201);
+const iss = new CountUp('issues',17);
+rev.start(); cus.start(); con.start(); iss.start();
+</script>
+
+</body>
+</html>
