@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Dashboard | ISP System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-purple-50 to-purple-100 font-sans text-gray-800">
+
+<!-- TOP NAVBAR -->
+<div class="flex justify-between items-center p-4 bg-white shadow-md">
+  <button id="toggleSidebar" class="text-gray-600 hover:text-green-600">☰</button>
+  <div class="flex space-x-3">
+    <button onclick="showSection('home')" class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition">Home</button>
+    <button id="logoutBtn" class="px-4 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 transition">Logout</button>
+  </div>
+</div>
+
+<div class="flex h-[calc(100vh-64px)]">
+
+  <!-- LEFT SIDEBAR -->
+  <div id="sidebar" class="w-64 bg-white shadow-lg p-5 space-y-4 transition-all duration-300">
+    <h2 class="text-2xl font-bold text-green-600 mb-6">Employee Panel</h2>
+    <button onclick="showSection('settings')" class="menuBtn">Settings</button>
+    <button onclick="showSection('customers')" class="menuBtn">Customer Info</button>
+    <button onclick="showSection('salary')" class="menuBtn">Salary</button>
+    <button onclick="showSection('chat')" class="menuBtn">System Chat</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="flex-1 p-6 overflow-y-auto">
+
+    <!-- NOTIFICATION BAR -->
+    <div class="bg-green-100 border border-green-300 p-3 rounded-lg shadow flex justify-between mb-6">
+      <span id="notificationText">Welcome back! No new alerts.</span>
+      <button onclick="clearNotification()" class="text-gray-500 hover:text-red-500">✖</button>
+    </div>
+
+    <!-- HOME SECTION -->
+    <div id="home" class="section">
+      <h1 class="text-3xl font-bold text-green-600 mb-4">Employee Dashboard</h1>
+
+      <!-- PROFILE -->
+      <div class="bg-white p-6 rounded-xl shadow mb-6 flex items-center space-x-6">
+        <img id="profilePhoto" class="w-28 h-28 rounded-full border" />
+        <div class="flex-1">
+          <h2 id="empNameDisplay" class="text-xl font-bold">John Doe</h2>
+          <p class="text-gray-500">Senior ISP Employee</p>
+          <input type="file" id="photoUpload" class="mt-2">
+        </div>
+      </div>
+
+      <!-- PERSONAL DETAILS -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <h3 class="text-lg font-semibold text-purple-600 mb-3">Personal Info</h3>
+        <input type="text" id="empNameInput" value="John Doe" class="input">
+        <input type="email" id="empEmailInput" value="john@example.com" class="input">
+        <input type="text" id="empPhoneInput" value="+8801XXXXXXXXX" class="input">
+        <button onclick="saveDetails()" class="saveBtn">Save</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings" class="section hidden">
+      <h2 class="text-xl font-bold text-purple-600 mb-3">Settings</h2>
+      <h3 class="font-semibold">Language</h3>
+      <button onclick="setLang('en')" class="langBtn">English</button>
+      <button onclick="setLang('bn')" class="langBtn">বাংলা</button>
+
+      <h3 class="font-semibold mt-4">Change Password</h3>
+      <input type="password" placeholder="New Password" class="input">
+      <button class="saveBtn">Update</button>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div id="customers" class="section hidden">
+      <h2 class="text-xl font-bold text-purple-600 mb-3">Customers</h2>
+      <table class="w-full border">
+        <tr class="bg-purple-100">
+          <th>ID</th><th>Name</th><th>Status</th>
+        </tr>
+        <tr><td>C001</td><td>Alice</td><td>Active</td></tr>
+        <tr><td>C002</td><td>Bob</td><td>Active</td></tr>
+      </table>
+    </div>
+
+    <!-- SALARY -->
+    <div id="salary" class="section hidden">
+      <h2 class="text-xl font-bold text-purple-600 mb-3">Salary Details</h2>
+      <p>Monthly Salary: <b>$800</b></p>
+      <p>Bonus: <b>$50</b></p>
+    </div>
+
+    <!-- CHAT -->
+    <div id="chat" class="section hidden">
+      <h2 class="text-xl font-bold text-purple-600 mb-3">System Chat</h2>
+      <div id="chatBox" class="bg-white h-64 p-3 overflow-y-auto border rounded"></div>
+      <div class="flex mt-2">
+        <input id="chatInput" class="input flex-1">
+        <button onclick="sendMessage()" class="saveBtn ml-2">Send</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.menuBtn{
+  display:block;
+  width:100%;
+  padding:10px;
+  background:#f3f4f6;
+  border-radius:8px;
+  text-align:left;
+  color:#374151;
+  font-weight:500;
+  transition:all .2s;
+}
+.menuBtn:hover{background:#e0f2fe;color:#1d4ed8;}
+
+.input{
+  display:block;
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #d1d5db;
+  border-radius:6px;
+}
+.saveBtn{
+  background:#6d28d9;
+  color:white;
+  padding:8px 14px;
+  border-radius:6px;
+  margin-top:5px;
+  transition:all .2s;
+}
+.saveBtn:hover{background:#7c3aed;}
+.langBtn{
+  background:#d8b4fe;
+  padding:6px 12px;
+  border-radius:6px;
+  margin-right:5px;
+  transition:all .2s;
+}
+.langBtn:hover{background:#c084fc;color:white;}
+.section{animation:fade .3s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+</style>
+
+<script>
+// Toggle Sidebar
+document.getElementById("toggleSidebar").onclick = () => {
+  const sidebar = document.getElementById("sidebar");
+  sidebar.classList.toggle("-ml-64");
+  sidebar.classList.toggle("hidden");
+}
+
+// Section switch
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+// Save photo locally
+const savedPhoto = localStorage.getItem("profilePhoto");
+if(savedPhoto) document.getElementById("profilePhoto").src = savedPhoto;
+
+photoUpload.onchange = e => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    profilePhoto.src = reader.result;
+    localStorage.setItem("profilePhoto", reader.result);
+  };
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+// Save details
+function saveDetails(){
+  showNotification("Profile saved successfully!");
+}
+
+// Chat (Fake Socket)
+const socket = io();
+
+function sendMessage(){
+  const msg = chatInput.value;
+  if(!msg) return;
+  socket.emit("chatMessage", msg);
+  chatBox.innerHTML += `<div><b>You:</b> ${msg}</div>`;
+  chatInput.value="";
+}
+
+socket.on("chatMessage", msg=>{
+  chatBox.innerHTML += `<div><b>User:</b> ${msg}</div>`;
+});
+
+// Notifications
+function showNotification(msg){
+  notificationText.innerText = msg;
+}
+function clearNotification(){
+  notificationText.innerText = "No new alerts";
+}
+
+// Language switch
+function setLang(lang){
+  if(lang==='bn') showNotification("ভাষা পরিবর্তন হয়েছে");
+  else showNotification("Language switched");
+}
+
+// Logout
+logoutBtn.onclick = () => {
+  sessionStorage.clear();
+  window.location.href="login.html";
+}
+</script>
+</body>
+</html>
