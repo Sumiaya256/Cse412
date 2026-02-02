@@ -3,169 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard | ISP System</title>
+<title>ISP Admin Dashboard</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/countup.js@2.6.2/dist/countUp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-green-50 font-sans text-gray-800">
-
-<div class="flex min-h-screen">
-
-<!-- ================= SIDEBAR ================= -->
-<aside id="sidebar" class="w-64 bg-white border-r border-gray-200 p-6 transition-all duration-300">
-  <h1 class="text-2xl font-extrabold text-green-600 mb-8">ISP Admin</h1>
-
-  <nav class="space-y-3">
-    <button class="navBtn active" onclick="showSection('dashboard')">Dashboard</button>
-    <button class="navBtn" onclick="showSection('users')">Users</button>
-    <button class="navBtn" onclick="showSection('employees')">Employees</button>
-    <button class="navBtn" onclick="showSection('network')">Network</button>
-    <button class="navBtn" onclick="showSection('payments')">Payments</button>
-    <button class="navBtn" onclick="showSection('reports')">Reports</button>
-    <button class="navBtn" onclick="showSection('settings')">Settings</button>
-  </nav>
-</aside>
-
-<!-- ================= MAIN ================= -->
-<main class="flex-1 p-6">
+<body class="bg-gradient-to-br from-green-50 via-purple-50 to-purple-100 text-gray-800 font-sans">
 
 <!-- TOP BAR -->
-<div class="flex justify-between items-center mb-8">
-  <button id="toggleSidebar" class="text-green-600 font-bold text-xl md:hidden">☰</button>
-  <h2 class="text-3xl font-bold">Admin Dashboard</h2>
-  <div class="flex items-center gap-4">
-    <span class="text-sm text-gray-500">ADMIN-001</span>
-    <img class="w-10 h-10 rounded-full border border-gray-200" src="https://i.pravatar.cc/100?img=12">
+<header class="sticky top-0 z-50 bg-white shadow-md px-6 py-4 flex justify-between items-center">
+  <button id="toggleSidebar" class="text-xl font-semibold">☰</button>
+  <div class="flex gap-3">
+    <a href="home.html" class="btnPrimary">Home</a>
+    <button id="logoutBtn" class="btnSecondary">Logout</button>
   </div>
-</div>
+</header>
 
-<!-- ================= SECTIONS ================= -->
-<div id="dashboard" class="section">
+<div class="flex h-[calc(100vh-72px)]">
 
-  <!-- KPI CARDS -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
-      <p class="text-gray-500">Total Revenue</p>
-      <h3 class="text-2xl font-bold text-green-600" id="revenue">$0</h3>
-      <span class="text-green-500 font-semibold">▲ 12%</span>
-    </div>
-    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
-      <p class="text-gray-500">Total Customers</p>
-      <h3 class="text-2xl font-bold text-green-600" id="customers">0</h3>
-      <span class="text-green-500 font-semibold">▲ 5%</span>
-    </div>
-    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
-      <p class="text-gray-500">Active Connections</p>
-      <h3 class="text-2xl font-bold text-green-600" id="connections">0</h3>
-      <span class="text-green-500 font-semibold">▲ 98%</span>
-    </div>
-    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
-      <p class="text-gray-500">Pending Issues</p>
-      <h3 class="text-2xl font-bold text-red-500" id="issues">0</h3>
-      <span class="text-red-500 font-semibold">▼ Needs attention</span>
-    </div>
-  </div>
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="w-72 bg-white shadow-lg p-6 space-y-3 transition-all duration-300">
+    <h2 class="text-2xl font-bold text-green-600 mb-4">Admin Panel</h2>
+    <button onclick="showSection('overview')" class="menuBtn">Overview</button>
+    <button onclick="showSection('usersSection')" class="menuBtn">Users</button>
+    <button onclick="showSection('employeesSection')" class="menuBtn">Employees</button>
+    <button onclick="showSection('issuesSection')" class="menuBtn">Pending Issues</button>
+    <button onclick="showSection('notificationsSection')" class="menuBtn">Notifications</button>
+  </aside>
 
-  <!-- CONTENT GRID -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 p-8 overflow-y-auto space-y-8">
+
+    <!-- OVERVIEW KPI CARDS -->
+    <section id="overview" class="section">
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="statCard">
+          <p class="statTitle">Total Revenue</p>
+          <p id="totalRevenue" class="statValue">$0</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Total Users</p>
+          <p id="totalUsers" class="statValue">0</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Total Employees</p>
+          <p id="totalEmployees" class="statValue">0</p>
+        </div>
+        <div class="statCard">
+          <p class="statTitle">Pending Issues</p>
+          <p id="totalIssues" class="statValue">0</p>
+        </div>
+      </div>
+    </section>
 
     <!-- USERS TABLE -->
-    <div class="lg:col-span-2 bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold text-green-600 mb-4">Recent Customers</h3>
-      <table class="w-full text-gray-700 border-collapse">
-        <thead>
-          <tr class="bg-green-100 text-left">
-            <th class="p-2">ID</th>
-            <th class="p-2">Name</th>
-            <th class="p-2">Plan</th>
-            <th class="p-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="hover:bg-green-50">
-            <td class="p-2">C-1021</td><td>Rahim</td><td>Fiber Pro</td><td class="text-green-600">Active</td>
-          </tr>
-          <tr class="hover:bg-green-50">
-            <td class="p-2">C-1022</td><td>Karim</td><td>Gamer</td><td class="text-green-600">Active</td>
-          </tr>
-          <tr class="hover:bg-green-50">
-            <td class="p-2">C-1023</td><td>Sadia</td><td>Basic</td><td class="text-red-500">Suspended</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <section id="usersSection" class="section hidden">
+      <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="sectionTitle">Users</h2>
+        <table class="w-full mt-4 text-sm border">
+          <thead class="bg-purple-100">
+            <tr>
+              <th class="p-2 border">ID</th>
+              <th class="p-2 border">Name</th>
+              <th class="p-2 border">Email</th>
+              <th class="p-2 border">Status</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </section>
 
-    <!-- LIVE NOTIFICATIONS -->
-    <div class="bg-white rounded-xl shadow p-5 hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold text-green-600 mb-4">Live Notifications</h3>
-      <ul id="notificationFeed" class="space-y-2 text-gray-700">
-        <li>No notifications yet</li>
-      </ul>
-    </div>
+    <!-- EMPLOYEES TABLE -->
+    <section id="employeesSection" class="section hidden">
+      <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="sectionTitle">Employees</h2>
+        <table class="w-full mt-4 text-sm border">
+          <thead class="bg-purple-100">
+            <tr>
+              <th class="p-2 border">ID</th>
+              <th class="p-2 border">Name</th>
+              <th class="p-2 border">Position</th>
+              <th class="p-2 border">Status</th>
+            </tr>
+          </thead>
+          <tbody id="employeesTableBody"></tbody>
+        </table>
+      </div>
+    </section>
 
-  </div>
-</div>
+    <!-- PENDING ISSUES -->
+    <section id="issuesSection" class="section hidden">
+      <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="sectionTitle">Pending Issues</h2>
+        <table class="w-full mt-4 text-sm border">
+          <thead class="bg-purple-100">
+            <tr>
+              <th class="p-2 border">ID</th>
+              <th class="p-2 border">Description</th>
+              <th class="p-2 border">Status</th>
+            </tr>
+          </thead>
+          <tbody id="issuesTableBody"></tbody>
+        </table>
+      </div>
+    </section>
 
-<!-- PLACEHOLDER SECTIONS -->
-<div id="users" class="section hidden"><h3 class="text-xl font-bold text-green-600">Users</h3></div>
-<div id="employees" class="section hidden"><h3 class="text-xl font-bold text-green-600">Employees</h3></div>
-<div id="network" class="section hidden"><h3 class="text-xl font-bold text-green-600">Network</h3></div>
-<div id="payments" class="section hidden"><h3 class="text-xl font-bold text-green-600">Payments</h3></div>
-<div id="reports" class="section hidden"><h3 class="text-xl font-bold text-green-600">Reports</h3></div>
-<div id="settings" class="section hidden"><h3 class="text-xl font-bold text-green-600">Settings</h3></div>
+    <!-- NOTIFICATIONS -->
+    <section id="notificationsSection" class="section hidden">
+      <div class="bg-white rounded-2xl shadow p-6">
+        <h2 class="sectionTitle">Notifications</h2>
+        <ul id="notificationFeed" class="mt-3 space-y-2 text-sm"></ul>
+      </div>
+    </section>
 
-</main>
+  </main>
 </div>
 
 <style>
-.navBtn{
+.menuBtn{
   width:100%;
-  text-align:left;
-  padding:10px 14px;
+  padding:10px;
   border-radius:10px;
+  background:#f3f4f6;
+  text-align:left;
   font-weight:500;
-  transition:.2s;
 }
-.navBtn:hover{background:#d1fae5}
-.navBtn.active{background:#10b981;color:white}
+.menuBtn:hover{background:#e0f2fe}
+
+.sectionTitle{
+  font-size:1.4rem;
+  font-weight:700;
+  color:#6b21a8;
+}
+
+.statCard{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.06);
+}
+.statTitle{font-size:.9rem;color:#6b7280}
+.statValue{font-size:1.5rem;font-weight:700}
+
+.btnPrimary{
+  background:#16a34a;
+  color:white;
+  padding:8px 16px;
+  border-radius:10px;
+}
+.btnSecondary{
+  background:#7c3aed;
+  color:white;
+  padding:8px 16px;
+  border-radius:10px;
+}
 
 .section{animation:fade .3s}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 </style>
 
 <script>
-// Toggle sidebar (mobile)
-document.getElementById("toggleSidebar").onclick = () => {
-  const sb = document.getElementById("sidebar");
-  sb.classList.toggle("hidden");
-}
+// ===== SIDEBAR TOGGLE =====
+const sidebar = document.getElementById("sidebar");
+const toggleSidebar = document.getElementById("toggleSidebar");
+toggleSidebar.onclick = () => sidebar.classList.toggle("hidden");
 
-// Section switch
+// ===== SHOW SECTION =====
 function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  document.querySelectorAll('.navBtn').forEach(btn=>btn.classList.remove('active'));
-  document.querySelector(`.navBtn[onclick="showSection('${id}')"]`)?.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'))
+  document.getElementById(id)?.classList.remove('hidden')
 }
 
-// Live Notifications (Fake)
-const feed = document.getElementById("notificationFeed");
-const messages = ["New customer registered","Payment received (৳2,500)","ONU offline detected","Employee updated profile"];
-setInterval(()=>{
-  const msg = messages[Math.floor(Math.random()*messages.length)];
-  const li = document.createElement("li");
-  li.textContent = msg;
-  feed.prepend(li);
-  if(feed.children.length>5) feed.removeChild(feed.lastChild);
-},4000);
+// ===== LOGOUT =====
+document.getElementById("logoutBtn").onclick = () => {
+  sessionStorage.clear()
+  location.href="login.html"
+}
 
-// Animated KPI numbers
-const rev = new CountUp('revenue',124800,{prefix:'$'});
-const cus = new CountUp('customers',3482);
-const con = new CountUp('connections',3201);
-const iss = new CountUp('issues',17);
-rev.start(); cus.start(); con.start(); iss.start();
+// ===== LOAD DASHBOARD DATA =====
+async function loadAdminDashboard(){
+  try {
+    // Users
+    const users = await fetch("/api/users").then(r=>r.json())
+    document.getElementById("totalUsers").textContent = users.length
+    const usersTbody = document.getElementById("usersTableBody")
+    usersTbody.innerHTML = ""
+    users.forEach(u=>{
+      const tr = document.createElement("tr")
+      tr.innerHTML = `<td class="p-2 border">${u.id}</td><td class="p-2 border">${u.name}</td><td class="p-2 border">${u.email}</td><td class="p-2 border">${u.status}</td>`
+      usersTbody.appendChild(tr)
+    })
+
+    // Employees
+    const employees = await fetch("/api/employees").then(r=>r.json())
+    document.getElementById("totalEmployees").textContent = employees.length
+    const empTbody = document.getElementById("employeesTableBody")
+    empTbody.innerHTML = ""
+    employees.forEach(e=>{
+      const tr = document.createElement("tr")
+      tr.innerHTML = `<td class="p-2 border">${e.id}</td><td class="p-2 border">${e.name}</td><td class="p-2 border">${e.position}</td><td class="p-2 border">${e.status}</td>`
+      empTbody.appendChild(tr)
+    })
+
+    // Revenue
+    const revenue = await fetch("/api/revenue").then(r=>r.json())
+    const totalRevenue = revenue.reduce((sum,r)=>sum+r.amount,0)
+    document.getElementById("totalRevenue").textContent = `$${totalRevenue}`
+
+    // Pending Issues
+    const issues = await fetch("/api/issues").then(r=>r.json())
+    document.getElementById("totalIssues").textContent = issues.length
+    const issuesTbody = document.getElementById("issuesTableBody")
+    issuesTbody.innerHTML = ""
+    issues.forEach(i=>{
+      const tr = document.createElement("tr")
+      tr.innerHTML = `<td class="p-2 border">${i.id}</td><td class="p-2 border">${i.description}</td><td class="p-2 border text-red-600">${i.status}</td>`
+      issuesTbody.appendChild(tr)
+    })
+
+    // Notifications feed
+    const feed = document.getElementById("notificationFeed")
+    setInterval(async ()=>{
+      const notif = await fetch("/api/notifications").then(r=>r.json())
+      const li = document.createElement("li")
+      li.textContent = notif.message
+      feed.prepend(li)
+      if(feed.children.length>5) feed.removeChild(feed.lastChild)
+    },4000)
+
+  } catch(e){ console.error("Dashboard load error:", e) }
+}
+
+// Initialize
+loadAdminDashboard()
 </script>
 
 </body>
